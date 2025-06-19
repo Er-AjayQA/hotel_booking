@@ -13,19 +13,23 @@ const clerkWebhooks = async (req, res) => {
       "svix-signature": req.headers["svix-signature"],
     };
 
+    const payload = req.body;
+
     // Verifying Headers
-    await whook.verify(JSON.stringify(req.body), headers);
+    await whook.verify(payload, headers);
 
     // Getting Data From Request Body
-    const { data, type } = req.body;
+    const event = JSON.parse(payload.toString());
+    const { data, type } = event;
 
     const userData = {
       _id: data.id,
-      email: data.email_addresses[0].email_address,
-      username: data.first_name + " " + data.last_name,
-      image: data.image_url,
+      email: data.email_addresses[0]?.email_address || "",
+      username:
+        [data.first_name, data.last_name].filter(Boolean).join(" ") ||
+        "Unknown",
+      image: data.image_url || "",
     };
-
     // Switch Case for Different Events
     switch (type) {
       case "user.created": {

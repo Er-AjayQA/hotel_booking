@@ -17,7 +17,11 @@ app.use(
     ignoredRoutes: ["/api/clerk"], // Exclude webhook
   })
 );
-app.post("/api/clerk", clerkWebhooks);
+app.post(
+  "/api/clerk",
+  express.raw({ type: "application/json" }),
+  clerkWebhooks
+);
 
 // Middlewares
 app.use(cors());
@@ -26,11 +30,7 @@ app.use(express.urlencoded({ extends: true }));
 
 app.get("/", (req, res) => res.send("API is working fine!!"));
 
-// Listen to Server
-app.listen(PORT, (err) => {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log(`Server is running on port: ${PORT}`);
-  }
-});
+// Only listen locally during development
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => console.log(`Local: http://localhost:${PORT}`));
+}
