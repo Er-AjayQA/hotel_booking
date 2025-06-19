@@ -1,13 +1,6 @@
 import User from "../models/user.js";
 import { Webhook } from "svix";
 
-// Add at the top
-console.log("Current directory:", process.cwd());
-console.log(
-  "Files in models dir:",
-  (await import("fs/promises")).readdir("models")
-);
-
 const clerkWebhooks = async (req, res) => {
   try {
     // Create a Svix instance with clerk webhook secret.

@@ -4,7 +4,7 @@ import "dotenv/config";
 import cors from "cors";
 const PORT = process.env.PORT || 3000;
 import { clerkMiddleware } from "@clerk/express";
-import connectDB from "./configs/db.config.js";
+import connectDB from "./configs/db.js";
 import clerkWebhooks from "./controllers/clerkWebHooks.js";
 
 // Initialize App
