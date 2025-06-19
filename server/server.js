@@ -11,26 +11,22 @@ import clerkWebhooks from "./controllers/clerkWebHooks.js";
 connectDB();
 const app = express();
 
-// API to Listen Clerk Webhooks
-app.use(
-  clerkMiddleware({
-    ignoredRoutes: ["/api/clerk"], // Exclude webhook
-  })
-);
-app.post(
-  "/api/clerk",
-  express.raw({ type: "application/json" }),
-  clerkWebhooks
-);
-
 // Middlewares
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extends: true }));
+app.use(clerkMiddleware());
+
+// API to Listen Clerk Webhooks
+app.post("/api/clerk", clerkWebhooks);
 
 app.get("/", (req, res) => res.send("API is working fine!!"));
 
-// Only listen locally during development
-if (process.env.NODE_ENV !== "production") {
-  app.listen(PORT, () => console.log(`Local: http://localhost:${PORT}`));
-}
+// Listen to Server
+app.listen(PORT, (err) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log(`Server is running on port: ${PORT}`);
+  }
+});
